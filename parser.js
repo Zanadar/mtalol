@@ -6,6 +6,6 @@ parser._transform = function(data, encoding, done) {
     done()
 }
 
-function () {
-
-}
+process.stdin
+.pipe(parser)
+.pipe(process.stdout)

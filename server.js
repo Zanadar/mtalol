@@ -2,26 +2,32 @@ var HAPI = require('hapi')
 var parseString = require('xml2js').parseString
 var request = require('request')
 var fs = require('fs')
-var es = require('es')
+var es = require('event-stream')
+var concat = require('concat-stream')
+var xmlStream = require('xml-stream')
 
-var options = {
-  host: 'web.mta.info',
-  path: '/status/serviceStatus.txt'
+// request('http://web.mta.info/status/serviceStatus.txt')
+//   .pipe(es.replace('&lt;', '<'))
+//   .pipe(es.replace('&gt;', '>'))
+//   .pipe(es.replace('&amp;nbsp;', ' '))
+//   .pipe(fs.createWriteStream('response.txt'))
+
+function processDocument (item) {
+  console.log(item)
 }
 
+var myFile = fs.createReadStream('./response.txt')
+var xml = new xmlStream(myFile, 'utf8');
 
-request('http://web.mta.info')
-  .pipe(es.replace('&lt;', '<'))
-  .pipe(es.replace('&rt;', '>'))
-  .pipe(fs.createWriteStream('response.txt'))
+// Process each type of document
+xml.on('error', function(err) {
+xml.on('updateElement: timestamp', processDocument);
+  console.log(err)
+})
+xml.on('updateElement: line', processDocument)
 
-// http.get(, function(res) {
-//   res.pipe(writable)
-//   res.on('end', function () {
-//       console.log("Logged to response.txt")
-//   })
-//   }).on('error', function(e) {
-//       console.log("Got error: " + e.message);
-// });
 
-// writable = fs.createWriteStream('response.txt');
+// parseString(xml, function(err, result) {
+//   if (err) throw err;
+//   console.log(JSON.stringify(result))
+// })
