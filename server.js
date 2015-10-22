@@ -1,26 +1,27 @@
 var HAPI = require('hapi')
 var parseString = require('xml2js').parseString
-var http = require('http')
+var request = require('request')
 var fs = require('fs')
+var es = require('es')
 
 var options = {
-    host: 'web.mta.info',
-    path: '/status/serviceStatus.txt'
+  host: 'web.mta.info',
+  path: '/status/serviceStatus.txt'
 }
 
-function writeResponse (chunk) {
-    var text = chunk.replace('&lt;', '<').replace('&gt;', '>')
-    parseString(text, function(err, result) {
-        fs.writeFile('response.txt', result, function (err) {
-            if (err) throw err;
-            console.log('It\'s saved!');
-        })
-    })
-}
 
-http.get(options, function(res) {
-    console.log("Got response: " + res)
-    res.on('data', writeResponse)
-   }).on('error', function(e) {
-        console.log("Got error: " + e.message);
-});
+request('http://web.mta.info')
+  .pipe(es.replace('&lt;', '<'))
+  .pipe(es.replace('&rt;', '>'))
+  .pipe(fs.createWriteStream('response.txt'))
+
+// http.get(, function(res) {
+//   res.pipe(writable)
+//   res.on('end', function () {
+//       console.log("Logged to response.txt")
+//   })
+//   }).on('error', function(e) {
+//       console.log("Got error: " + e.message);
+// });
+
+// writable = fs.createWriteStream('response.txt');
