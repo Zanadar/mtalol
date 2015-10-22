@@ -1,0 +1,15 @@
+{
+  "name": "mta-lol",
+  "version": "0.1.7",
+  "description": "Magic 8 ball for your subway ride.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^11.0.2",
+    "xml2js": "^0.4.13"
+  }
+}
